@@ -1,9 +1,7 @@
 services:
 
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+    image: ghcr.io/ieuanwyn/pt/server:latest
     restart: unless-stopped
     environment:
       PORT: 3001
@@ -21,9 +19,7 @@ services:
       - "3001"
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: ghcr.io/ieuanwyn/pt/client:latest
     restart: unless-stopped
     depends_on:
       - server
