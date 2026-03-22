@@ -249,7 +249,8 @@ Three containers are defined: `db` (MariaDB 11), `server` (Node/Express), `clien
 
    | Variable | Example value |
    |---|---|
-   | `MARIADB_ROOT_PASSWORD` | `strongrootpass` |
+   | `DB_HOST` | `192.168.x.x` (your MariaDB server IP) |
+   | `DB_PORT` | `3306` |
    | `DB_USER` | `training_user` |
    | `DB_PASSWORD` | `strongpass` |
    | `DB_NAME` | `training_plan` |
