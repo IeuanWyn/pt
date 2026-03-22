@@ -233,3 +233,59 @@ Check your `ANTHROPIC_API_KEY` in `.env`. The key must have credits available.
 
 **App loads but shows blank page:**
 Check the browser console for errors. The Vite proxy (`/api`) requires the server to be running on port 3001.
+
+---
+
+## Docker / Portainer Deployment
+
+Three containers are defined: `db` (MariaDB 11), `server` (Node/Express), `client` (React built by Vite, served via nginx). Nginx proxies `/api/` and `/auth/` to the server container — no extra ports are exposed for the backend.
+
+### Portainer Stack (recommended)
+
+1. In Portainer go to **Stacks → Add stack**
+2. Choose **Repository** and enter your GitHub repo URL
+3. Set the **Compose path** to `docker-compose.yml`
+4. Under **Environment variables** add the values from `.env.docker.example`:
+
+   | Variable | Example value |
+   |---|---|
+   | `DB_HOST` | `192.168.x.x` (your MariaDB server IP) |
+   | `DB_PORT` | `3306` |
+   | `DB_USER` | `training_user` |
+   | `DB_PASSWORD` | `strongpass` |
+   | `DB_NAME` | `training_plan` |
+   | `APP_PORT` | `80` (or `8080` etc.) |
+   | `STRAVA_CLIENT_ID` | *(from Strava API settings)* |
+   | `STRAVA_CLIENT_SECRET` | *(from Strava API settings)* |
+   | `STRAVA_REDIRECT_URI` | `http://YOUR_SERVER_IP/auth/strava/callback` |
+   | `ANTHROPIC_API_KEY` | `sk-ant-...` |
+   | `CLIENT_URL` | `http://YOUR_SERVER_IP` |
+
+5. Click **Deploy the stack**
+
+Portainer will pull the repo, build the images, and start all three containers. The app is then available at `http://YOUR_SERVER_IP` (or the port you set for `APP_PORT`).
+
+### CLI (docker compose)
+
+```bash
+git clone https://github.com/IeuanWyn/pt.git
+cd pt
+cp .env.docker.example .env
+# Edit .env with your values
+docker compose up -d --build
+```
+
+### Strava OAuth with Docker
+
+Because the OAuth redirect goes via the browser, the `STRAVA_REDIRECT_URI` must be the **public/LAN address of your server**, not `localhost`:
+
+```
+STRAVA_REDIRECT_URI=http://192.168.1.100/auth/strava/callback
+CLIENT_URL=http://192.168.1.100
+```
+
+Also update the **Authorization Callback Domain** in your Strava API app settings to match your server's IP or hostname.
+
+### Updating
+
+In Portainer, go to the stack and click **Pull and redeploy**. The database volume (`db_data`) is preserved across rebuilds — your data is safe.
