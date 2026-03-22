@@ -4,10 +4,10 @@ services:
     image: mariadb:11
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
-      MYSQL_DATABASE: ${DB_NAME:-training_plan}
-      MYSQL_USER: ${DB_USER:-training_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-changeme}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-changeme}
+      MARIADB_DATABASE: ${DB_NAME:-training_plan}
+      MARIADB_USER: ${DB_USER:-training_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-changeme}
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
