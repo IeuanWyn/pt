@@ -99,8 +99,8 @@ export default function Plan() {
             onClick={() => setActivePhase(i + 1)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activePhase === i + 1
-                ? 'bg-orange-500 text-white'
-                : 'bg-navy-800 text-gray-300 hover:bg-navy-700'
+                ? 'bg-emerald-500 text-white'
+                : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
             }`}
           >
             Phase {i + 1}: {label}
@@ -113,7 +113,7 @@ export default function Plan() {
         <div className="space-y-4">
           <Card>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-orange-400 text-lg">Phase 1: Foundation</h3>
+              <h3 className="font-bold text-emerald-400 text-lg">Phase 1: Foundation</h3>
               <span className="text-xs text-gray-400">{PHASE_DATES[0]}</span>
             </div>
             <p className="text-gray-300 text-sm mb-4">
@@ -147,19 +147,19 @@ export default function Plan() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-gray-400 border-b border-navy-700">
+                      <tr className="text-gray-400 border-b border-slate-700">
                         <th className="text-left py-2 pr-4">Exercise</th>
                         <th className="text-center py-2 pr-4">Sets</th>
                         <th className="text-center py-2 pr-4">Reps</th>
                         <th className="text-left py-2">Notes</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-navy-700">
+                    <tbody className="divide-y divide-slate-700">
                       {CALF_REHAB.map(ex => (
                         <tr key={ex.name}>
                           <td className="py-2 pr-4 text-white font-medium">{ex.name}</td>
-                          <td className="py-2 pr-4 text-center text-orange-400">{ex.sets}</td>
-                          <td className="py-2 pr-4 text-center text-orange-400">{ex.reps}</td>
+                          <td className="py-2 pr-4 text-center text-emerald-400">{ex.sets}</td>
+                          <td className="py-2 pr-4 text-center text-emerald-400">{ex.reps}</td>
                           <td className="py-2 text-gray-400 text-xs">{ex.note}</td>
                         </tr>
                       ))}
@@ -180,7 +180,7 @@ export default function Plan() {
                         <div
                           onClick={() => toggleChecklist(key, item)}
                           className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                            done ? 'bg-green-500 border-green-500' : 'border-gray-500 group-hover:border-orange-400'
+                            done ? 'bg-green-500 border-green-500' : 'border-gray-500 group-hover:border-emerald-400'
                           }`}
                         >
                           {done && <span className="text-white text-xs">✓</span>}
@@ -207,29 +207,29 @@ export default function Plan() {
         <div className="space-y-4">
           <Card>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-orange-400 text-lg">Phase 2: Run/Walk Introduction</h3>
+              <h3 className="font-bold text-emerald-400 text-lg">Phase 2: Run/Walk Introduction</h3>
               <span className="text-xs text-gray-400">{PHASE_DATES[1]}</span>
             </div>
             <p className="text-gray-300 text-sm mb-4">
               Your first running steps! Run/walk intervals are the safest, most effective way to start running
               from scratch — used by elite coaches worldwide for beginners.
             </p>
-            <div className="bg-navy-900 rounded-lg p-3 mb-4 text-sm text-gray-300">
-              <strong className="text-orange-300">Important:</strong> The run effort should feel easy — you're not racing.
+            <div className="bg-slate-900 rounded-lg p-3 mb-4 text-sm text-gray-300">
+              <strong className="text-emerald-300">Important:</strong> The run effort should feel easy — you're not racing.
               If you can't speak in short sentences while running, slow down.
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-gray-400 border-b border-navy-700">
+                  <tr className="text-gray-400 border-b border-slate-700">
                     <th className="text-left py-2 pr-4">Week</th>
                     <th className="text-left py-2 pr-4">Session Structure</th>
                     <th className="text-center py-2 pr-4">Sessions/wk</th>
                     <th className="text-center py-2">Done</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-navy-700">
+                <tbody className="divide-y divide-slate-700">
                   {PHASE2_WEEKS.map(w => {
                     const key = `2_${w.week}`
                     const done = progress[key]?.completed || false
@@ -239,7 +239,7 @@ export default function Plan() {
                           <span className="font-medium text-white">Week {w.week}</span>
                         </td>
                         <td className="py-2.5 pr-4 text-gray-300">{w.desc}</td>
-                        <td className="py-2.5 pr-4 text-center text-orange-400">{w.sessions}×</td>
+                        <td className="py-2.5 pr-4 text-center text-emerald-400">{w.sessions}×</td>
                         <td className="py-2.5 text-center">
                           <button
                             onClick={() => toggleWeek(2, w.week)}
@@ -265,7 +265,7 @@ export default function Plan() {
         <div className="space-y-4">
           <Card>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-orange-400 text-lg">Phase 3: Base Building</h3>
+              <h3 className="font-bold text-emerald-400 text-lg">Phase 3: Base Building</h3>
               <span className="text-xs text-gray-400">{PHASE_DATES[2]}</span>
             </div>
             <p className="text-gray-300 text-sm mb-4">
@@ -278,9 +278,9 @@ export default function Plan() {
                 {[
                   { title: 'Easy Run', icon: '🐢', desc: 'Conversational pace. Can talk in full sentences. 20–35 min.', color: 'border-green-500/40' },
                   { title: 'Long Run', icon: '📏', desc: 'Longest run of the week. Add no more than 10% to last week\'s distance.', color: 'border-blue-500/40' },
-                  { title: 'Tempo Effort', icon: '⚡', desc: 'Comfortably hard. Can only manage short phrases. 15–20 min.', color: 'border-orange-500/40' },
+                  { title: 'Tempo Effort', icon: '⚡', desc: 'Comfortably hard. Can only manage short phrases. 15–20 min.', color: 'border-emerald-500/40' },
                 ].map(s => (
-                  <div key={s.title} className={`bg-navy-900 border ${s.color} rounded-lg p-3`}>
+                  <div key={s.title} className={`bg-slate-900 border ${s.color} rounded-lg p-3`}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xl">{s.icon}</span>
                       <h4 className="font-semibold text-white text-sm">{s.title}</h4>
@@ -290,7 +290,7 @@ export default function Plan() {
                 ))}
               </div>
 
-              <div className="bg-navy-900 rounded-lg p-3">
+              <div className="bg-slate-900 rounded-lg p-3">
                 <h4 className="font-semibold text-white mb-1">📏 The 10% Rule</h4>
                 <p className="text-sm text-gray-300">
                   Never increase your long run by more than 10% from the previous week.
@@ -316,7 +316,7 @@ export default function Plan() {
                             done ? 'bg-yellow-400 border-yellow-400 scale-110' : 'border-gray-500 group-hover:border-yellow-400'
                           }`}
                         >
-                          {done && <span className="text-navy-900 text-xs font-bold">★</span>}
+                          {done && <span className="text-slate-900 text-xs font-bold">★</span>}
                         </div>
                         <span className={`text-sm font-medium ${done ? 'text-yellow-400' : 'text-gray-300'} ${m.epic ? 'text-base' : ''}`}>
                           {m.label}
@@ -343,7 +343,7 @@ export default function Plan() {
         <div className="space-y-4">
           <Card>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-orange-400 text-lg">Phase 4: 10k Prep</h3>
+              <h3 className="font-bold text-emerald-400 text-lg">Phase 4: 10k Prep</h3>
               <span className="text-xs text-gray-400">{PHASE_DATES[3]}</span>
             </div>
 
@@ -358,10 +358,10 @@ export default function Plan() {
               <div className="grid md:grid-cols-3 gap-3">
                 {[
                   { title: 'Easy Run', icon: '🐢', desc: '30–40 min easy pace. Recovery run. Never skip the easy runs!', color: 'border-green-500/40' },
-                  { title: 'Tempo Run', icon: '⚡', desc: '20–25 min. Hard but controlled. Builds race-day pace tolerance.', color: 'border-orange-500/40' },
+                  { title: 'Tempo Run', icon: '⚡', desc: '20–25 min. Hard but controlled. Builds race-day pace tolerance.', color: 'border-emerald-500/40' },
                   { title: 'Long Run', icon: '📏', desc: 'Build to 8–10km. Practice your race-day nutrition strategy.', color: 'border-blue-500/40' },
                 ].map(s => (
-                  <div key={s.title} className={`bg-navy-900 border ${s.color} rounded-lg p-3`}>
+                  <div key={s.title} className={`bg-slate-900 border ${s.color} rounded-lg p-3`}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xl">{s.icon}</span>
                       <h4 className="font-semibold text-white text-sm">{s.title}</h4>
@@ -371,8 +371,8 @@ export default function Plan() {
                 ))}
               </div>
 
-              <div className="bg-navy-900 rounded-lg p-4 border border-orange-500/30">
-                <h4 className="font-bold text-orange-400 mb-2">📉 Taper (Final 2 Weeks)</h4>
+              <div className="bg-slate-900 rounded-lg p-4 border border-emerald-500/30">
+                <h4 className="font-bold text-emerald-400 mb-2">📉 Taper (Final 2 Weeks)</h4>
                 <div className="space-y-2 text-sm text-gray-300">
                   <p><strong className="text-white">2 weeks out:</strong> Reduce total mileage by 20–30%. Keep intensity.</p>
                   <p><strong className="text-white">Race week:</strong> 2–3 short easy runs (20–30 min). No new workouts.</p>
@@ -381,8 +381,8 @@ export default function Plan() {
                 </div>
               </div>
 
-              <div className="bg-orange-900/30 border border-orange-800 rounded-lg p-4">
-                <p className="text-orange-300 font-bold text-center text-lg">
+              <div className="bg-emerald-900/30 border border-emerald-800 rounded-lg p-4">
+                <p className="text-emerald-300 font-bold text-center text-lg">
                   "Finish strong, injury-free — that's the win."
                 </p>
               </div>
@@ -409,9 +409,9 @@ function RaceCountdown({ profile: _ }) {
     : null
 
   return (
-    <div className="bg-navy-900 rounded-xl p-4 text-center border border-orange-500/30">
+    <div className="bg-slate-900 rounded-xl p-4 text-center border border-emerald-500/30">
       <p className="text-gray-400 text-sm">Race Day Countdown</p>
-      <p className="text-4xl font-bold text-orange-400 my-1">{days}</p>
+      <p className="text-4xl font-bold text-emerald-400 my-1">{days}</p>
       <p className="text-gray-400 text-sm">days to go</p>
       {raceDate && <p className="text-white text-sm mt-1">{raceDate}</p>}
       <p className="text-gray-300 text-sm mt-1">{profile?.goal_event_name || 'My First Ever 10k'}</p>

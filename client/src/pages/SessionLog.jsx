@@ -126,7 +126,7 @@ export default function SessionLog() {
         <h2 className="text-xl font-bold text-white">Session Log</h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors"
         >
           {showForm ? '✕ Cancel' : '+ Log Session'}
         </button>
@@ -142,7 +142,7 @@ export default function SessionLog() {
                 type="date"
                 value={formData.session_date}
                 onChange={e => setFormData(p => ({ ...p, session_date: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 required
               />
             </div>
@@ -151,7 +151,7 @@ export default function SessionLog() {
               <select
                 value={formData.activity_type}
                 onChange={e => setFormData(p => ({ ...p, activity_type: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               >
                 {ACTIVITY_TYPES.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -167,7 +167,7 @@ export default function SessionLog() {
                 placeholder="e.g. 2.5"
                 value={formData.distance_km}
                 onChange={e => setFormData(p => ({ ...p, distance_km: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
@@ -179,7 +179,7 @@ export default function SessionLog() {
                   placeholder="Min"
                   value={formData.duration_minutes}
                   onChange={e => setFormData(p => ({ ...p, duration_minutes: e.target.value }))}
-                  className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                  className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 />
                 <input
                   type="number"
@@ -188,7 +188,7 @@ export default function SessionLog() {
                   placeholder="Sec"
                   value={formData.duration_seconds_part}
                   onChange={e => setFormData(p => ({ ...p, duration_seconds_part: e.target.value }))}
-                  className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                  className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 />
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function SessionLog() {
                 placeholder="e.g. 145"
                 value={formData.avg_hr}
                 onChange={e => setFormData(p => ({ ...p, avg_hr: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
@@ -209,7 +209,7 @@ export default function SessionLog() {
               <select
                 value={formData.calf_feel}
                 onChange={e => setFormData(p => ({ ...p, calf_feel: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               >
                 <option value="">Not rated</option>
                 {CALF_EMOJIS.slice(1).map((em, i) => (
@@ -224,14 +224,14 @@ export default function SessionLog() {
                 value={formData.notes}
                 onChange={e => setFormData(p => ({ ...p, notes: e.target.value }))}
                 rows={2}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
             </div>
             <div className="sm:col-span-2">
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-800 text-white rounded-lg font-medium transition-colors"
+                className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-800 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Saving...' : 'Save Session'}
               </button>
@@ -248,7 +248,7 @@ export default function SessionLog() {
             <select
               value={filter.type}
               onChange={e => setFilter(p => ({ ...p, type: e.target.value }))}
-              className="bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
             >
               <option value="all">All types</option>
               {ACTIVITY_TYPES.map(t => (
@@ -262,7 +262,7 @@ export default function SessionLog() {
               type="date"
               value={filter.from}
               onChange={e => setFilter(p => ({ ...p, from: e.target.value }))}
-              className="bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
             />
           </div>
           <div>
@@ -271,7 +271,7 @@ export default function SessionLog() {
               type="date"
               value={filter.to}
               onChange={e => setFilter(p => ({ ...p, to: e.target.value }))}
-              className="bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
             />
           </div>
           {(filter.from || filter.to || filter.type !== 'all') && (
@@ -290,7 +290,7 @@ export default function SessionLog() {
         <Card title="Personal Bests" icon="🏆">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {pbs.first_run && (
-              <div className="bg-navy-900 rounded-lg p-3 text-center">
+              <div className="bg-slate-900 rounded-lg p-3 text-center">
                 <p className="text-xs text-gray-400 mb-1">First Ever Run</p>
                 <p className="text-lg font-bold text-yellow-400">🎉</p>
                 <p className="text-sm text-white">{formatDate(pbs.first_run.session_date)}</p>
@@ -300,16 +300,16 @@ export default function SessionLog() {
               </div>
             )}
             {pbs.longest_run && (
-              <div className="bg-navy-900 rounded-lg p-3 text-center">
+              <div className="bg-slate-900 rounded-lg p-3 text-center">
                 <p className="text-xs text-gray-400 mb-1">Longest Run</p>
-                <p className="text-lg font-bold text-orange-400">
+                <p className="text-lg font-bold text-emerald-400">
                   {parseFloat(pbs.longest_run.distance_km).toFixed(2)} km
                 </p>
                 <p className="text-xs text-gray-400">{formatDate(pbs.longest_run.session_date)}</p>
               </div>
             )}
             {pbs.longest_duration && (
-              <div className="bg-navy-900 rounded-lg p-3 text-center">
+              <div className="bg-slate-900 rounded-lg p-3 text-center">
                 <p className="text-xs text-gray-400 mb-1">Longest Run Time</p>
                 <p className="text-lg font-bold text-blue-400">
                   {formatDuration(pbs.longest_duration.duration_seconds)}
@@ -333,7 +333,7 @@ export default function SessionLog() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-400 border-b border-navy-700">
+                <tr className="text-gray-400 border-b border-slate-700">
                   <th className="text-left py-2 pr-3">Date</th>
                   <th className="text-left py-2 pr-3">Type</th>
                   <th className="text-right py-2 pr-3">Dist</th>
@@ -343,9 +343,9 @@ export default function SessionLog() {
                   <th className="py-2"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-navy-700">
+              <tbody className="divide-y divide-slate-700">
                 {sessions.map(s => (
-                  <tr key={s.id} className="hover:bg-navy-750">
+                  <tr key={s.id} className="hover:bg-slate-700">
                     <td className="py-2.5 pr-3 text-gray-300 whitespace-nowrap">{formatDate(s.session_date)}</td>
                     <td className="py-2.5 pr-3">
                       <div className="flex items-center gap-1.5 flex-wrap">
