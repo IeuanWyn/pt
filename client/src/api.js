@@ -36,5 +36,17 @@ export const getStravaAuthUrl = () => api.get('/strava/auth-url')
 export const syncStrava = () => api.post('/strava/sync', {}, { timeout: 60000 })
 export const disconnectStrava = () => api.post('/strava/disconnect')
 
+// Health Connect
+export const importHealthConnect = (file) => {
+  const form = new FormData()
+  form.append('file', file)
+  return api.post('/health-connect/import', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60000,
+  })
+}
+export const getBodyMetrics = (params) => api.get('/health-connect/metrics', { params })
+export const getLatestBodyMetrics = () => api.get('/health-connect/latest')
+
 // Clear all data
 export const clearAllData = () => api.delete('/data/all')

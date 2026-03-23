@@ -108,6 +108,21 @@ async function initDB() {
     )
   `);
 
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS body_metrics (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      recorded_at DATETIME NOT NULL,
+      weight_kg DECIMAL(6,3),
+      body_fat_pct DECIMAL(5,2),
+      bmi DECIMAL(5,2),
+      lean_mass_kg DECIMAL(6,3),
+      bone_mass_kg DECIMAL(6,3),
+      source VARCHAR(50) DEFAULT 'health_connect',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY unique_recorded_source (recorded_at, source)
+    )
+  `);
+
   console.log('Database tables initialised');
 }
 

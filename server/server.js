@@ -27,6 +27,7 @@ app.use('/api/strava', require('./routes/strava'));
 app.use('/api/plan', require('./routes/plan'));
 app.use('/api/sessions', require('./routes/sessions'));
 app.use('/api/chat', require('./routes/chat'));
+app.use('/api/health-connect', require('./routes/healthConnect'));
 
 // Clear all data endpoint
 app.delete('/api/data/all', async (req, res) => {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
-import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData } from '../api'
+import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData, importHealthConnect, getBodyMetrics, getLatestBodyMetrics } from '../api'
 import Card from '../components/Card'
 
 function getFirstSaturdayOfNovember(year) {
@@ -38,6 +38,52 @@ export default function Profile() {
   const [saved, setSaved] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [clearing, setClearing] = useState(false)
+
+  // Health Connect
+  const [hcImporting, setHcImporting] = useState(false)
+  const [hcResult, setHcResult] = useState(null)
+  const [hcLatest, setHcLatest] = useState(null)
+  const [hcHistory, setHcHistory] = useState([])
+  const fileInputRef = useRef(null)
+
+  useEffect(() => {
+    getLatestBodyMetrics().then(r => setHcLatest(r.data || null)).catch(() => {})
+    getBodyMetrics({ limit: 10 }).then(r => setHcHistory(r.data || [])).catch(() => {})
+  }, [])
+
+  const handleHcImport = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setHcImporting(true)
+    setHcResult(null)
+    try {
+      const res = await importHealthConnect(file)
+      setHcResult({ success: true, message: res.data.message })
+      // Refresh data
+      const [latest, history] = await Promise.all([
+        getLatestBodyMetrics(),
+        getBodyMetrics({ limit: 10 }),
+      ])
+      setHcLatest(latest.data || null)
+      setHcHistory(history.data || [])
+    } catch (err) {
+      setHcResult({ success: false, message: err.response?.data?.error || 'Import failed' })
+    } finally {
+      setHcImporting(false)
+      e.target.value = ''
+    }
+  }
+
+  function kgToStoneLbs(kg) {
+    const totalLbs = kg * 2.20462
+    const stone = Math.floor(totalLbs / 14)
+    const lbs = Math.round(totalLbs % 14)
+    return `${stone}st ${lbs}lb`
+  }
+
+  function formatDate(dt) {
+    return new Date(dt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  }
 
   useEffect(() => {
     if (profile) {
@@ -147,6 +193,95 @@ export default function Profile() {
             </button>
           </div>
         )}
+      </Card>
+
+      {/* Health Connect */}
+      <Card title="Health Connect / Renpho" icon="⚖️">
+        <div className="space-y-4">
+          {/* Latest metrics summary */}
+          {hcLatest && hcLatest.recorded_at ? (
+            <div>
+              <p className="text-xs text-gray-400 mb-2">Latest measurement — {formatDate(hcLatest.recorded_at)}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {hcLatest.weight_kg != null && (
+                  <div className="bg-navy-900 rounded-lg px-3 py-2 text-center">
+                    <p className="text-white font-semibold text-sm">{kgToStoneLbs(hcLatest.weight_kg)}</p>
+                    <p className="text-gray-400 text-xs">Weight</p>
+                  </div>
+                )}
+                {hcLatest.body_fat_pct != null && (
+                  <div className="bg-navy-900 rounded-lg px-3 py-2 text-center">
+                    <p className="text-white font-semibold text-sm">{Number(hcLatest.body_fat_pct).toFixed(1)}%</p>
+                    <p className="text-gray-400 text-xs">Body Fat</p>
+                  </div>
+                )}
+                {hcLatest.lean_mass_kg != null && (
+                  <div className="bg-navy-900 rounded-lg px-3 py-2 text-center">
+                    <p className="text-white font-semibold text-sm">{Number(hcLatest.lean_mass_kg).toFixed(1)} kg</p>
+                    <p className="text-gray-400 text-xs">Lean Mass</p>
+                  </div>
+                )}
+                {hcLatest.bone_mass_kg != null && (
+                  <div className="bg-navy-900 rounded-lg px-3 py-2 text-center">
+                    <p className="text-white font-semibold text-sm">{Number(hcLatest.bone_mass_kg).toFixed(2)} kg</p>
+                    <p className="text-gray-400 text-xs">Bone Mass</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400">No body metrics yet. Import your Health Connect export below.</p>
+          )}
+
+          {/* Recent history */}
+          {hcHistory.length > 1 && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-gray-300">
+                <thead>
+                  <tr className="text-gray-500 border-b border-navy-700">
+                    <th className="text-left py-1 pr-3">Date</th>
+                    <th className="text-right pr-3">Weight</th>
+                    <th className="text-right pr-3">Body Fat</th>
+                    <th className="text-right">Lean Mass</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hcHistory.map(m => (
+                    <tr key={m.id} className="border-b border-navy-800/50">
+                      <td className="py-1 pr-3 text-gray-400">{formatDate(m.recorded_at)}</td>
+                      <td className="text-right pr-3">{m.weight_kg != null ? kgToStoneLbs(m.weight_kg) : '—'}</td>
+                      <td className="text-right pr-3">{m.body_fat_pct != null ? `${Number(m.body_fat_pct).toFixed(1)}%` : '—'}</td>
+                      <td className="text-right">{m.lean_mass_kg != null ? `${Number(m.lean_mass_kg).toFixed(1)} kg` : '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Import button */}
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip"
+              className="hidden"
+              onChange={handleHcImport}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={hcImporting}
+              className="flex items-center gap-2 px-4 py-2 bg-green-700 hover:bg-green-600 disabled:bg-green-900 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              {hcImporting ? 'Importing...' : 'Import Health Connect Export (.zip)'}
+            </button>
+            {hcResult && (
+              <p className={`text-sm mt-2 ${hcResult.success ? 'text-green-400' : 'text-red-400'}`}>
+                {hcResult.message}
+              </p>
+            )}
+          </div>
+        </div>
       </Card>
 
       {/* Profile form */}
