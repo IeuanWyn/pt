@@ -36,6 +36,12 @@ export const getStravaAuthUrl = () => api.get('/strava/auth-url')
 export const syncStrava = () => api.post('/strava/sync', {}, { timeout: 60000 })
 export const disconnectStrava = () => api.post('/strava/disconnect')
 
+// Renpho
+export const getRenphoStatus = () => api.get('/renpho/status')
+export const connectRenpho = (data) => api.post('/renpho/connect', data, { timeout: 60000 })
+export const syncRenpho = () => api.post('/renpho/sync', {}, { timeout: 60000 })
+export const disconnectRenpho = () => api.post('/renpho/disconnect')
+
 // Health Connect
 export const importHealthConnect = (file) => {
   const form = new FormData()

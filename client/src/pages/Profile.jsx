@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
-import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData, importHealthConnect, getBodyMetrics, getLatestBodyMetrics } from '../api'
+import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData, importHealthConnect, getBodyMetrics, getLatestBodyMetrics, getRenphoStatus, connectRenpho, syncRenpho, disconnectRenpho } from '../api'
 import Card from '../components/Card'
 
 function getFirstSaturdayOfNovember(year) {
@@ -38,6 +38,60 @@ export default function Profile() {
   const [saved, setSaved] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [clearing, setClearing] = useState(false)
+
+  // Renpho
+  const [renphoStatus, setRenphoStatus] = useState(null)
+  const [renphoForm, setRenphoForm] = useState({ email: '', password: '' })
+  const [renphoConnecting, setRenphoConnecting] = useState(false)
+  const [renphoSyncing, setRenphoSyncing] = useState(false)
+  const [renphoMsg, setRenphoMsg] = useState(null)
+
+  useEffect(() => {
+    getRenphoStatus().then(r => setRenphoStatus(r.data)).catch(() => {})
+  }, [])
+
+  const handleRenphoConnect = async (e) => {
+    e.preventDefault()
+    setRenphoConnecting(true)
+    setRenphoMsg(null)
+    try {
+      const res = await connectRenpho(renphoForm)
+      setRenphoMsg({ success: true, text: res.data.message })
+      setRenphoStatus({ connected: true, email: renphoForm.email, last_sync: new Date().toISOString() })
+      setRenphoForm({ email: '', password: '' })
+      // Refresh body metrics
+      const [latest, history] = await Promise.all([getLatestBodyMetrics(), getBodyMetrics({ limit: 10 })])
+      setHcLatest(latest.data || null)
+      setHcHistory(history.data || [])
+    } catch (err) {
+      setRenphoMsg({ success: false, text: err.response?.data?.error || 'Connection failed' })
+    } finally {
+      setRenphoConnecting(false)
+    }
+  }
+
+  const handleRenphoSync = async () => {
+    setRenphoSyncing(true)
+    setRenphoMsg(null)
+    try {
+      const res = await syncRenpho()
+      setRenphoMsg({ success: true, text: res.data.message })
+      setRenphoStatus(s => ({ ...s, last_sync: new Date().toISOString() }))
+      const [latest, history] = await Promise.all([getLatestBodyMetrics(), getBodyMetrics({ limit: 10 })])
+      setHcLatest(latest.data || null)
+      setHcHistory(history.data || [])
+    } catch (err) {
+      setRenphoMsg({ success: false, text: err.response?.data?.error || 'Sync failed' })
+    } finally {
+      setRenphoSyncing(false)
+    }
+  }
+
+  const handleRenphoDisconnect = async () => {
+    await disconnectRenpho()
+    setRenphoStatus({ connected: false })
+    setRenphoMsg(null)
+  }
 
   // Health Connect
   const [hcImporting, setHcImporting] = useState(false)
@@ -195,8 +249,84 @@ export default function Profile() {
         )}
       </Card>
 
+      {/* Renpho direct API */}
+      <Card title="Renpho Scale (Direct Sync)" icon="⚖️">
+        {renphoStatus?.connected ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-400 font-medium">Connected ✓</p>
+                <p className="text-xs text-gray-400 mt-0.5">{renphoStatus.email}</p>
+                {renphoStatus.last_sync && (
+                  <p className="text-xs text-gray-500 mt-0.5">Last sync: {formatDate(renphoStatus.last_sync)}</p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleRenphoSync}
+                  disabled={renphoSyncing}
+                  className="px-3 py-2 bg-blue-700 hover:bg-blue-600 disabled:bg-blue-900 text-white rounded-lg text-sm"
+                >
+                  {renphoSyncing ? 'Syncing...' : 'Sync now'}
+                </button>
+                <button
+                  onClick={handleRenphoDisconnect}
+                  className="px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded-lg text-sm"
+                >
+                  Disconnect
+                </button>
+              </div>
+            </div>
+            {renphoMsg && (
+              <p className={`text-sm ${renphoMsg.success ? 'text-green-400' : 'text-red-400'}`}>{renphoMsg.text}</p>
+            )}
+            <p className="text-xs text-amber-400/80">
+              Note: syncing will log you out of the Renpho app. Re-opening the app will expire this session until you sync again.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-300">
+              Connect directly to Renpho's cloud to pull all 13+ body composition metrics automatically
+              (body fat, visceral fat, muscle mass, BMR, metabolic age, protein %, and more).
+            </p>
+            <p className="text-xs text-amber-400/80">
+              ⚠️ Uses your Renpho account credentials. Syncing will temporarily log you out of the Renpho app.
+            </p>
+            <form onSubmit={handleRenphoConnect} className="space-y-2">
+              <input
+                type="email"
+                placeholder="Renpho account email"
+                value={renphoForm.email}
+                onChange={e => setRenphoForm(p => ({ ...p, email: e.target.value }))}
+                required
+                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+              />
+              <input
+                type="password"
+                placeholder="Renpho account password"
+                value={renphoForm.password}
+                onChange={e => setRenphoForm(p => ({ ...p, password: e.target.value }))}
+                required
+                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+              />
+              <button
+                type="submit"
+                disabled={renphoConnecting}
+                className="w-full py-2 bg-orange-600 hover:bg-orange-500 disabled:bg-orange-900 text-white rounded-lg text-sm font-medium"
+              >
+                {renphoConnecting ? 'Connecting...' : 'Connect & Sync Renpho'}
+              </button>
+            </form>
+            {renphoMsg && (
+              <p className={`text-sm ${renphoMsg.success ? 'text-green-400' : 'text-red-400'}`}>{renphoMsg.text}</p>
+            )}
+          </div>
+        )}
+      </Card>
+
       {/* Health Connect */}
-      <Card title="Health Connect / Renpho" icon="⚖️">
+      <Card title="Health Connect (Other Data)" icon="❤️">
         <div className="space-y-4">
           {/* Latest metrics summary */}
           {hcLatest && hcLatest.recorded_at ? (

@@ -117,9 +117,45 @@ async function initDB() {
       bmi DECIMAL(5,2),
       lean_mass_kg DECIMAL(6,3),
       bone_mass_kg DECIMAL(6,3),
+      water_pct DECIMAL(5,2),
+      visceral_fat DECIMAL(5,2),
+      muscle_pct DECIMAL(5,2),
+      muscle_mass_kg DECIMAL(6,3),
+      bmr INT,
+      metabolic_age INT,
+      protein_pct DECIMAL(5,2),
+      subcutaneous_fat_pct DECIMAL(5,2),
       source VARCHAR(50) DEFAULT 'health_connect',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       UNIQUE KEY unique_recorded_source (recorded_at, source)
+    )
+  `);
+
+  // Add extra Renpho columns to existing installs that pre-date this migration
+  const addCols = [
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS water_pct DECIMAL(5,2)',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS visceral_fat DECIMAL(5,2)',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS muscle_pct DECIMAL(5,2)',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS muscle_mass_kg DECIMAL(6,3)',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS bmr INT',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS metabolic_age INT',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS protein_pct DECIMAL(5,2)',
+    'ALTER TABLE body_metrics ADD COLUMN IF NOT EXISTS subcutaneous_fat_pct DECIMAL(5,2)',
+  ];
+  for (const sql of addCols) {
+    try { await pool.execute(sql); } catch (_) { /* column already exists */ }
+  }
+
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS renpho_credentials (
+      id INT PRIMARY KEY DEFAULT 1,
+      email VARCHAR(200),
+      password_enc TEXT,
+      session_key TEXT,
+      renpho_user_id VARCHAR(100),
+      last_sync TIMESTAMP NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
 
