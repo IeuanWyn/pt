@@ -15,11 +15,11 @@ export default function Sidebar() {
   const phase = currentPhase()
 
   return (
-    <nav className="w-56 bg-navy-900 border-r border-navy-700 flex flex-col py-4 min-h-full shrink-0">
+    <nav className="w-56 bg-slate-900 border-r border-slate-700 flex flex-col py-4 min-h-full shrink-0">
       <div className="px-4 mb-4">
-        <div className="bg-navy-800 rounded-lg p-3">
+        <div className="bg-slate-800 rounded-lg p-3">
           <p className="text-xs text-gray-400 mb-1">Current Phase</p>
-          <p className="font-semibold text-orange-400 text-sm">Phase {phase}: {phaseNames[phase - 1]}</p>
+          <p className="font-semibold text-emerald-400 text-sm">Phase {phase}: {phaseNames[phase - 1]}</p>
           {weeks !== null && (
             <p className="text-xs text-gray-400 mt-1">{weeks} weeks to race</p>
           )}
@@ -33,8 +33,8 @@ export default function Sidebar() {
             onClick={() => setActiveTab(item.id)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${
               activeTab === item.id
-                ? 'bg-orange-500 text-white'
-                : 'text-gray-300 hover:bg-navy-800 hover:text-white'
+                ? 'bg-emerald-500 text-white'
+                : 'text-gray-300 hover:bg-slate-800 hover:text-white'
             }`}
           >
             <span className="text-base">{item.icon}</span>

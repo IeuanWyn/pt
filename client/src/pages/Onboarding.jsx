@@ -64,7 +64,7 @@ export default function Onboarding() {
   const age = calculateAge(form.dob)
 
   return (
-    <div className="min-h-screen bg-navy-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -73,8 +73,8 @@ export default function Onboarding() {
           <p className="text-gray-400 mt-2">Let's set up your personalised training plan. Every step you take is a step you've never taken before.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-navy-800 border border-navy-700 rounded-2xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-orange-400">Your Profile</h2>
+        <form onSubmit={handleSubmit} className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-emerald-400">Your Profile</h2>
 
           <div>
             <label className="text-xs text-gray-400 block mb-1">Your Name *</label>
@@ -82,7 +82,7 @@ export default function Onboarding() {
               type="text"
               value={form.name}
               onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-              className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white"
+              className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white"
               placeholder="What should we call you?"
               required
             />
@@ -91,13 +91,13 @@ export default function Onboarding() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-gray-400 block mb-1">
-                Date of Birth {age && <span className="text-orange-400">(Age: {age})</span>}
+                Date of Birth {age && <span className="text-emerald-400">(Age: {age})</span>}
               </label>
               <input
                 type="date"
                 value={form.dob}
                 onChange={e => setForm(p => ({ ...p, dob: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white"
               />
             </div>
             <div>
@@ -106,7 +106,7 @@ export default function Onboarding() {
                 type="text"
                 value={form.location}
                 onChange={e => setForm(p => ({ ...p, location: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white"
                 placeholder="Town/city"
               />
             </div>
@@ -119,14 +119,14 @@ export default function Onboarding() {
                 <div className="relative flex-1">
                   <input type="number" min="0" max="40" value={form.weight_stones}
                     onChange={e => setForm(p => ({ ...p, weight_stones: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
                   />
                   <span className="absolute right-2 top-2.5 text-gray-400 text-xs">st</span>
                 </div>
                 <div className="relative flex-1">
                   <input type="number" min="0" max="13" value={form.weight_lbs}
                     onChange={e => setForm(p => ({ ...p, weight_lbs: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
                   />
                   <span className="absolute right-2 top-2.5 text-gray-400 text-xs">lb</span>
                 </div>
@@ -138,14 +138,14 @@ export default function Onboarding() {
                 <div className="relative flex-1">
                   <input type="number" min="0" max="8" value={form.height_feet}
                     onChange={e => setForm(p => ({ ...p, height_feet: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
                   />
                   <span className="absolute right-2 top-2.5 text-gray-400 text-xs">ft</span>
                 </div>
                 <div className="relative flex-1">
                   <input type="number" min="0" max="11" value={form.height_inches}
                     onChange={e => setForm(p => ({ ...p, height_inches: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white pr-6 text-sm"
                   />
                   <span className="absolute right-2 top-2.5 text-gray-400 text-xs">in</span>
                 </div>
@@ -159,7 +159,7 @@ export default function Onboarding() {
               value={form.injury_notes}
               onChange={e => setForm(p => ({ ...p, injury_notes: e.target.value }))}
               rows={2}
-              className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white resize-none text-sm"
+              className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white resize-none text-sm"
             />
           </div>
 
@@ -169,7 +169,7 @@ export default function Onboarding() {
               value={form.running_experience}
               onChange={e => setForm(p => ({ ...p, running_experience: e.target.value }))}
               rows={2}
-              className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white resize-none text-sm"
+              className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white resize-none text-sm"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function Onboarding() {
                 type="text"
                 value={form.goal_event_name}
                 onChange={e => setForm(p => ({ ...p, goal_event_name: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white text-sm"
               />
             </div>
             <div>
@@ -189,7 +189,7 @@ export default function Onboarding() {
                 type="date"
                 value={form.target_race_date}
                 onChange={e => setForm(p => ({ ...p, target_race_date: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white text-sm"
               />
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function Onboarding() {
               type="text"
               value={form.zwift_username}
               onChange={e => setForm(p => ({ ...p, zwift_username: e.target.value }))}
-              className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2.5 text-white text-sm"
+              className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2.5 text-white text-sm"
               placeholder="Optional"
             />
           </div>
@@ -215,7 +215,7 @@ export default function Onboarding() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-800 text-white rounded-xl font-bold text-lg transition-colors"
+              className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-800 text-white rounded-xl font-bold text-lg transition-colors"
             >
               {saving ? 'Setting up your plan...' : "Let's Start Training! 🏃"}
             </button>

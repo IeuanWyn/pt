@@ -69,7 +69,7 @@ export default function Dashboard() {
       {/* Stats bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Phase', value: `${phase}: ${phaseNames[phase - 1]}`, color: 'text-orange-400' },
+          { label: 'Phase', value: `${phase}: ${phaseNames[phase - 1]}`, color: 'text-emerald-400' },
           { label: 'Weeks to Race', value: weeks !== null ? weeks : '—', color: 'text-blue-400' },
           { label: 'Sessions Logged', value: totalSessions, color: 'text-green-400' },
           { label: 'Plan Progress', value: `${pctComplete}%`, color: 'text-purple-400' },
@@ -99,11 +99,11 @@ export default function Dashboard() {
             </div>
             <div>
               <span className="text-gray-400">Race Date: </span>
-              <span className="text-orange-400 font-medium">{raceDate}</span>
+              <span className="text-emerald-400 font-medium">{raceDate}</span>
             </div>
           </div>
-          <div className="mt-3 border-t border-navy-700 pt-3">
-            <p className="text-orange-300 italic text-sm font-medium">
+          <div className="mt-3 border-t border-slate-700 pt-3">
+            <p className="text-emerald-300 italic text-sm font-medium">
               "Every step you take is a step you've never taken before."
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function Dashboard() {
         )}
         <button
           onClick={() => setActiveTab('coach')}
-          className={`flex items-center justify-center gap-2 py-3 rounded-xl font-medium bg-orange-500 hover:bg-orange-600 text-white transition-colors ${stravaConnected ? '' : 'col-span-2'}`}
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl font-medium bg-emerald-500 hover:bg-emerald-600 text-white transition-colors ${stravaConnected ? '' : 'col-span-2'}`}
         >
           <span>💬</span> Chat with Coach
         </button>
@@ -155,13 +155,13 @@ export default function Dashboard() {
             <p className="text-gray-400 text-sm">No sessions logged yet.</p>
             <button
               onClick={() => setActiveTab('sessions')}
-              className="mt-2 text-orange-400 text-sm hover:underline"
+              className="mt-2 text-emerald-400 text-sm hover:underline"
             >
               Log your first session →
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-navy-700">
+          <div className="divide-y divide-slate-700">
             {recentSessions.map(session => (
               <div key={session.id} className="py-2.5 flex items-center justify-between">
                 <div>
@@ -223,7 +223,7 @@ export default function Dashboard() {
         )}
         <button
           onClick={() => setActiveTab('plan')}
-          className="mt-3 text-orange-400 text-sm hover:underline"
+          className="mt-3 text-emerald-400 text-sm hover:underline"
         >
           View full plan →
         </button>

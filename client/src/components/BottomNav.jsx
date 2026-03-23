@@ -13,13 +13,13 @@ export default function BottomNav() {
   const { activeTab, setActiveTab } = useApp()
 
   return (
-    <nav className="bg-navy-900 border-t border-navy-700 flex">
+    <nav className="bg-slate-900 border-t border-slate-700 flex">
       {navItems.map(item => (
         <button
           key={item.id}
           onClick={() => setActiveTab(item.id)}
           className={`flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors ${
-            activeTab === item.id ? 'text-orange-400' : 'text-gray-400 hover:text-gray-200'
+            activeTab === item.id ? 'text-emerald-400' : 'text-gray-400 hover:text-gray-200'
           }`}
         >
           <span className="text-lg leading-none">{item.icon}</span>

@@ -159,7 +159,7 @@ export default function Profile() {
                 type="text"
                 value={form.name}
                 onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 placeholder="Your name"
                 required
               />
@@ -167,13 +167,13 @@ export default function Profile() {
 
             <div>
               <label className="text-xs text-gray-400 block mb-1">
-                Date of Birth {form.dob && <span className="text-orange-400">(Age: {age})</span>}
+                Date of Birth {form.dob && <span className="text-emerald-400">(Age: {age})</span>}
               </label>
               <input
                 type="date"
                 value={form.dob}
                 onChange={e => setForm(p => ({ ...p, dob: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
 
@@ -183,7 +183,7 @@ export default function Profile() {
                 type="text"
                 value={form.location}
                 onChange={e => setForm(p => ({ ...p, location: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 placeholder="e.g. Manchester"
               />
             </div>
@@ -196,7 +196,7 @@ export default function Profile() {
                     type="number" min="0" max="40"
                     value={form.weight_stones}
                     onChange={e => setForm(p => ({ ...p, weight_stones: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
                   />
                   <span className="absolute right-2 top-2 text-gray-400 text-xs">st</span>
                 </div>
@@ -205,7 +205,7 @@ export default function Profile() {
                     type="number" min="0" max="13"
                     value={form.weight_lbs}
                     onChange={e => setForm(p => ({ ...p, weight_lbs: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
                   />
                   <span className="absolute right-2 top-2 text-gray-400 text-xs">lb</span>
                 </div>
@@ -220,7 +220,7 @@ export default function Profile() {
                     type="number" min="0" max="8"
                     value={form.height_feet}
                     onChange={e => setForm(p => ({ ...p, height_feet: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
                   />
                   <span className="absolute right-2 top-2 text-gray-400 text-xs">ft</span>
                 </div>
@@ -229,7 +229,7 @@ export default function Profile() {
                     type="number" min="0" max="11"
                     value={form.height_inches}
                     onChange={e => setForm(p => ({ ...p, height_inches: parseInt(e.target.value) || 0 }))}
-                    className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
+                    className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm pr-8"
                   />
                   <span className="absolute right-2 top-2 text-gray-400 text-xs">in</span>
                 </div>
@@ -242,7 +242,7 @@ export default function Profile() {
                 value={form.injury_notes}
                 onChange={e => setForm(p => ({ ...p, injury_notes: e.target.value }))}
                 rows={2}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
             </div>
 
@@ -252,7 +252,7 @@ export default function Profile() {
                 value={form.running_experience}
                 onChange={e => setForm(p => ({ ...p, running_experience: e.target.value }))}
                 rows={2}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
             </div>
 
@@ -262,7 +262,7 @@ export default function Profile() {
                 type="number" step="0.1" min="0"
                 value={form.longest_distance_km}
                 onChange={e => setForm(p => ({ ...p, longest_distance_km: parseFloat(e.target.value) || 0 }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
 
@@ -274,7 +274,7 @@ export default function Profile() {
                     type="checkbox"
                     checked={form.previous_5k}
                     onChange={e => setForm(p => ({ ...p, previous_5k: e.target.checked }))}
-                    className="w-4 h-4 accent-orange-500"
+                    className="w-4 h-4 accent-emerald-500"
                   />
                   <span className="text-sm text-gray-300">Completed a 5k before</span>
                 </label>
@@ -283,7 +283,7 @@ export default function Profile() {
                     type="checkbox"
                     checked={form.previous_10k}
                     onChange={e => setForm(p => ({ ...p, previous_10k: e.target.checked }))}
-                    className="w-4 h-4 accent-orange-500"
+                    className="w-4 h-4 accent-emerald-500"
                   />
                   <span className="text-sm text-gray-300">Completed a 10k before</span>
                 </label>
@@ -296,7 +296,7 @@ export default function Profile() {
                 type="text"
                 value={form.goal_event_name}
                 onChange={e => setForm(p => ({ ...p, goal_event_name: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
 
@@ -306,7 +306,7 @@ export default function Profile() {
                 type="date"
                 value={form.target_race_date}
                 onChange={e => setForm(p => ({ ...p, target_race_date: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
 
@@ -316,7 +316,7 @@ export default function Profile() {
                 type="text"
                 value={form.zwift_username}
                 onChange={e => setForm(p => ({ ...p, zwift_username: e.target.value }))}
-                className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
                 placeholder="Optional"
               />
             </div>
@@ -325,7 +325,7 @@ export default function Profile() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-800 text-white rounded-lg font-semibold transition-colors"
+            className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-800 text-white rounded-lg font-semibold transition-colors"
           >
             {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save Profile'}
           </button>
@@ -350,7 +350,7 @@ export default function Profile() {
               </button>
               <button
                 onClick={() => setShowClearConfirm(false)}
-                className="px-4 py-2 bg-navy-700 hover:bg-navy-600 text-gray-300 rounded-lg text-sm"
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded-lg text-sm"
               >
                 Cancel
               </button>

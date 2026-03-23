@@ -110,7 +110,7 @@ export default function Coach() {
         <div className="flex flex-wrap gap-4 text-sm">
           <div>
             <span className="text-gray-400">Phase: </span>
-            <span className="text-orange-400 font-medium">{phase} — {phaseNames[phase - 1]}</span>
+            <span className="text-emerald-400 font-medium">{phase} — {phaseNames[phase - 1]}</span>
           </div>
           {weeks !== null && (
             <div>
@@ -132,7 +132,7 @@ export default function Coach() {
             key={action.label}
             onClick={() => handleSend(action.prompt)}
             disabled={sending}
-            className="flex items-center gap-1.5 px-3 py-2 bg-navy-800 hover:bg-navy-700 border border-navy-600 text-gray-300 rounded-lg text-sm transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-gray-300 rounded-lg text-sm transition-colors disabled:opacity-50"
           >
             <span>{action.icon}</span>
             {action.label}
@@ -141,12 +141,12 @@ export default function Coach() {
       </div>
 
       {/* Chat messages */}
-      <div className="bg-navy-800 border border-navy-700 rounded-xl flex flex-col" style={{ minHeight: '400px', maxHeight: '60vh' }}>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl flex flex-col" style={{ minHeight: '400px', maxHeight: '60vh' }}>
         {/* Messages area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
           {loading ? (
             <div className="flex items-center justify-center h-32">
-              <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12">
@@ -159,8 +159,8 @@ export default function Coach() {
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                   msg.role === 'user'
-                    ? 'bg-orange-500 text-white rounded-tr-sm'
-                    : 'bg-navy-900 text-gray-100 rounded-tl-sm border border-navy-600'
+                    ? 'bg-emerald-500 text-white rounded-tr-sm'
+                    : 'bg-slate-900 text-gray-100 rounded-tl-sm border border-slate-600'
                 }`}>
                   {msg.role === 'assistant' ? (
                     <div className="chat-content prose prose-invert prose-sm max-w-none">
@@ -180,7 +180,7 @@ export default function Coach() {
           {/* Typing indicator */}
           {sending && (
             <div className="flex justify-start">
-              <div className="bg-navy-900 border border-navy-600 rounded-2xl rounded-tl-sm px-4 py-3">
+              <div className="bg-slate-900 border border-slate-600 rounded-2xl rounded-tl-sm px-4 py-3">
                 <div className="flex gap-1 items-center">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -201,7 +201,7 @@ export default function Coach() {
         )}
 
         {/* Input area */}
-        <div className="border-t border-navy-700 p-3">
+        <div className="border-t border-slate-700 p-3">
           <div className="flex gap-2">
             <textarea
               ref={inputRef}
@@ -211,12 +211,12 @@ export default function Coach() {
               placeholder="Ask your coach anything..."
               rows={2}
               disabled={sending}
-              className="flex-1 bg-navy-900 border border-navy-600 rounded-xl px-3 py-2 text-white text-sm resize-none focus:outline-none focus:border-orange-500 placeholder-gray-500 disabled:opacity-50"
+              className="flex-1 bg-slate-900 border border-slate-600 rounded-xl px-3 py-2 text-white text-sm resize-none focus:outline-none focus:border-emerald-500 placeholder-gray-500 disabled:opacity-50"
             />
             <button
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-navy-700 disabled:text-gray-500 text-white rounded-xl font-medium transition-colors self-end"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-700 disabled:text-gray-500 text-white rounded-xl font-medium transition-colors self-end"
             >
               {sending ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

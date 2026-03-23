@@ -5,7 +5,7 @@ export default function Header() {
   const { syncing, syncMessage, handleSync, stravaConnected, profile, setActiveTab } = useApp()
 
   return (
-    <header className="bg-navy-900 border-b border-navy-700 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+    <header className="bg-slate-900 border-b border-slate-700 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center gap-3">
         <span className="text-2xl">🏃</span>
         <div>
@@ -48,7 +48,7 @@ export default function Header() {
 
         <button
           onClick={() => setActiveTab('coach')}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors"
         >
           <span>💬</span>
           <span className="hidden sm:inline">Coach</span>

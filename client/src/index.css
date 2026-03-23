@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-navy-950 text-gray-100 font-sans;
+    @apply bg-slate-950 text-gray-100 font-sans;
   }
 
   * {
@@ -33,7 +33,7 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #1e2a4a 25%, #253357 50%, #1e2a4a 75%);
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -55,12 +55,12 @@
 
 .chat-content li { margin-bottom: 0.125rem; }
 
-.chat-content strong { font-weight: 700; color: #fdba74; }
+.chat-content strong { font-weight: 700; color: #6ee7b7; }
 
 .chat-content p { margin-bottom: 0.5rem; }
 
 .chat-content code {
-  background: #1e2a4a;
+  background: #1e293b;
   padding: 0.1rem 0.3rem;
   border-radius: 3px;
   font-size: 0.85em;
