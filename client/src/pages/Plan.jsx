@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
-import { getProgress, saveProgress, getNotes, saveNote } from '../api'
+import { getProgress, saveProgress, getNotes, saveNote, getWeekWeather } from '../api'
 import Card from '../components/Card'
 
 const PHASE_LABELS = ['Foundation', 'Run/Walk Introduction', 'Base Building', '10k Prep']
@@ -31,6 +31,157 @@ const CALF_REHAB = [
   { name: 'Single-leg calf raises (straight)', sets: '3', reps: '10–15', note: 'Progress when 2-leg is pain-free' },
   { name: 'Single-leg calf raises (bent)', sets: '3', reps: '10–15', note: 'Final progression before running' },
 ]
+
+// Phase 1 weekly template — Mon(0) to Sun(6)
+const WEEKLY_TEMPLATE = [
+  { dayIndex: 0, label: 'Monday',    type: 'walk+rehab', icon: '🚶', title: 'Walk + Calf Rehab',     desc: '20–30 min brisk walk, then calf rehab exercises' },
+  { dayIndex: 1, label: 'Tuesday',   type: 'zwift',      icon: '🚴', title: 'Zwift Zone 2',          desc: '30–45 min, 120–140 bpm, conversational pace' },
+  { dayIndex: 2, label: 'Wednesday', type: 'walk',       icon: '🚶', title: 'Walk',                  desc: '20–30 min brisk walk. Stop if calf aches.' },
+  { dayIndex: 3, label: 'Thursday',  type: 'zwift',      icon: '🚴', title: 'Zwift Zone 2',          desc: '30–45 min, steady effort. No heroics.' },
+  { dayIndex: 4, label: 'Friday',    type: 'walk+rehab', icon: '🚶', title: 'Walk + Calf Rehab',     desc: '20–30 min brisk walk, then calf rehab exercises' },
+  { dayIndex: 5, label: 'Saturday',  type: 'zwift',      icon: '🚴', title: 'Zwift Zone 2 (longer)', desc: '40–50 min if feeling good. Still Zone 2.' },
+  { dayIndex: 6, label: 'Sunday',    type: 'rest',       icon: '😴', title: 'Rest / Gentle Walk',    desc: 'Full rest, or a short easy 10–15 min stroll if you want.' },
+]
+
+function getWeekDates() {
+  const today = new Date()
+  const dayOfWeek = today.getDay() // 0=Sun, 1=Mon … 6=Sat
+  // Monday-anchored: find this week's Monday
+  const monday = new Date(today)
+  monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7))
+  monday.setHours(0, 0, 0, 0)
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+    return d.toISOString().slice(0, 10)
+  })
+}
+
+function WeeklyPlan() {
+  const [weather, setWeather] = useState(null)
+  const [weatherError, setWeatherError] = useState(null)
+  const [loadingWeather, setLoadingWeather] = useState(true)
+
+  useEffect(() => {
+    getWeekWeather()
+      .then(res => setWeather(res.data))
+      .catch(err => setWeatherError(err.response?.data?.error || 'Could not load weather'))
+      .finally(() => setLoadingWeather(false))
+  }, [])
+
+  const weekDates = getWeekDates()
+  const today = new Date().toISOString().slice(0, 10)
+
+  // Build a map of date → weather day
+  const weatherMap = {}
+  if (weather?.days) {
+    weather.days.forEach(d => { weatherMap[d.date] = d })
+  }
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-white text-base">This Week's Plan</h3>
+        {weather?.location && (
+          <span className="text-xs text-gray-400">📍 {weather.location}</span>
+        )}
+      </div>
+
+      {loadingWeather && (
+        <p className="text-xs text-gray-500 mb-3">Loading weather…</p>
+      )}
+      {weatherError && !loadingWeather && (
+        <div className="text-xs text-amber-400 bg-amber-900/20 rounded p-2 mb-3">
+          ⚠️ Weather unavailable: {weatherError}. Set your location in Profile to enable weather.
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {WEEKLY_TEMPLATE.map((day, i) => {
+          const date = weekDates[i]
+          const isToday = date === today
+          const isPast = date < today
+          const w = weatherMap[date]
+          const isWalkDay = day.type === 'walk' || day.type === 'walk+rehab'
+
+          // For walk days: if weather says outdoor=false, suggest swapping to indoor bike
+          const swapToIndoor = isWalkDay && w && !w.walkRecommendation.outdoor
+
+          return (
+            <div
+              key={day.label}
+              className={`rounded-lg p-3 border transition-all ${
+                isToday
+                  ? 'border-emerald-500 bg-emerald-900/20'
+                  : isPast
+                  ? 'border-slate-700 bg-slate-800/30 opacity-60'
+                  : 'border-slate-700 bg-slate-800/50'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                {/* Day label */}
+                <div className="shrink-0 w-24">
+                  <div className={`text-sm font-semibold ${isToday ? 'text-emerald-400' : 'text-gray-300'}`}>
+                    {day.label}
+                    {isToday && <span className="ml-1 text-xs text-emerald-500">← today</span>}
+                  </div>
+                  <div className="text-xs text-gray-500">{date.slice(5)}</div>
+                </div>
+
+                {/* Activity */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-base">{swapToIndoor ? '🚴' : day.icon}</span>
+                    <span className={`text-sm font-medium ${isToday ? 'text-white' : 'text-gray-200'}`}>
+                      {swapToIndoor ? 'Indoor Bike (Zwift)' : day.title}
+                    </span>
+                    {swapToIndoor && (
+                      <span className="text-xs bg-amber-800/50 text-amber-300 rounded px-1.5 py-0.5">
+                        weather swap
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {swapToIndoor
+                      ? `${w.walkRecommendation.reason} — do 30–45 min Zone 2 instead`
+                      : day.desc}
+                  </p>
+
+                  {/* Weather strip for walk days */}
+                  {isWalkDay && w && !swapToIndoor && (
+                    <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
+                      <span>{w.weatherIcon} {w.weatherLabel}</span>
+                      <span>🌡️ {w.tempMin}–{w.tempMax}°C</span>
+                      {w.precipitation > 0 && <span>💧 {w.precipitation}mm</span>}
+                      <span>💨 {w.windspeed} km/h</span>
+                    </div>
+                  )}
+
+                  {/* Walk recommendation note */}
+                  {isWalkDay && w && !swapToIndoor && w.walkRecommendation.reason !== 'Good conditions for a walk' && (
+                    <p className="text-xs text-amber-400 mt-1">⚠️ {w.walkRecommendation.reason}</p>
+                  )}
+                </div>
+
+                {/* Weather for non-walk days (Zwift/rest) — just show temp */}
+                {!isWalkDay && w && day.type !== 'rest' && (
+                  <div className="shrink-0 text-right text-xs text-gray-500">
+                    <div>{w.weatherIcon}</div>
+                    <div>{w.tempMax}°C</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="text-xs text-gray-600 mt-3">
+        Walk days swap to indoor bike automatically when rain, strong wind (&gt;40 km/h), or heavy precipitation (&gt;2mm) is forecast.
+      </p>
+    </Card>
+  )
+}
 
 export default function Plan() {
   const { currentPhase } = useApp()
@@ -111,6 +262,7 @@ export default function Plan() {
       {/* Phase 1 */}
       {activePhase === 1 && (
         <div className="space-y-4">
+          <WeeklyPlan />
           <Card>
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-bold text-emerald-400 text-lg">Phase 1: Foundation</h3>

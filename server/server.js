@@ -29,6 +29,7 @@ app.use('/api/sessions', require('./routes/sessions'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/health-connect', require('./routes/healthConnect'));
 app.use('/api/renpho', require('./routes/renpho'));
+app.use('/api/weather', require('./routes/weather'));
 
 // Clear all data endpoint
 app.delete('/api/data/all', async (req, res) => {

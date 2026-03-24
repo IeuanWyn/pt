@@ -54,5 +54,8 @@ export const importHealthConnect = (file) => {
 export const getBodyMetrics = (params) => api.get('/health-connect/metrics', { params })
 export const getLatestBodyMetrics = () => api.get('/health-connect/latest')
 
+// Weather
+export const getWeekWeather = () => api.get('/weather/week')
+
 // Clear all data
 export const clearAllData = () => api.delete('/data/all')
