@@ -61,16 +61,30 @@ function WeeklyPlan() {
   const [weather, setWeather] = useState(null)
   const [weatherError, setWeatherError] = useState(null)
   const [loadingWeather, setLoadingWeather] = useState(true)
+  const [done, setDone] = useState({})
+
+  const weekDates = getWeekDates()
+  const today = new Date().toISOString().slice(0, 10)
 
   useEffect(() => {
     getWeekWeather()
       .then(res => setWeather(res.data))
       .catch(err => setWeatherError(err.response?.data?.error || 'Could not load weather'))
       .finally(() => setLoadingWeather(false))
+
+    // Load saved completion state for each day this week
+    getNotes('weekly_day').then(res => {
+      const map = {}
+      res.data.forEach(row => { map[row.note_key] = row.completed })
+      setDone(map)
+    }).catch(() => {})
   }, [])
 
-  const weekDates = getWeekDates()
-  const today = new Date().toISOString().slice(0, 10)
+  const toggleDay = async (date, title) => {
+    const current = done[date] || false
+    await saveNote({ note_type: 'weekly_day', note_key: date, note_value: title, completed: !current })
+    setDone(prev => ({ ...prev, [date]: !current }))
+  }
 
   // Build a map of date → weather day
   const weatherMap = {}
@@ -78,10 +92,15 @@ function WeeklyPlan() {
     weather.days.forEach(d => { weatherMap[d.date] = d })
   }
 
+  const completedCount = weekDates.filter(d => done[d]).length
+
   return (
     <Card>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-white text-base">This Week's Plan</h3>
+        <div>
+          <h3 className="font-bold text-white text-base">This Week's Plan</h3>
+          <p className="text-xs text-gray-500 mt-0.5">{completedCount}/7 days done</p>
+        </div>
         {weather?.location && (
           <span className="text-xs text-gray-400">📍 {weather.location}</span>
         )}
@@ -101,17 +120,19 @@ function WeeklyPlan() {
           const date = weekDates[i]
           const isToday = date === today
           const isPast = date < today
+          const isDone = done[date] || false
           const w = weatherMap[date]
           const isWalkDay = day.type === 'walk' || day.type === 'walk+rehab'
-
-          // For walk days: if weather says outdoor=false, suggest swapping to indoor bike
           const swapToIndoor = isWalkDay && w && !w.walkRecommendation.outdoor
+          const activityTitle = swapToIndoor ? 'Indoor Bike (Zwift)' : day.title
 
           return (
             <div
               key={day.label}
               className={`rounded-lg p-3 border transition-all ${
-                isToday
+                isDone
+                  ? 'border-green-700 bg-green-900/20 opacity-75'
+                  : isToday
                   ? 'border-emerald-500 bg-emerald-900/20'
                   : isPast
                   ? 'border-slate-700 bg-slate-800/30 opacity-60'
@@ -119,11 +140,24 @@ function WeeklyPlan() {
               }`}
             >
               <div className="flex items-start gap-3">
+                {/* Tick button */}
+                <button
+                  onClick={() => toggleDay(date, activityTitle)}
+                  className={`mt-0.5 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    isDone
+                      ? 'bg-green-500 border-green-500 text-white'
+                      : 'border-gray-500 hover:border-green-400'
+                  }`}
+                  title={isDone ? 'Mark as not done' : 'Mark as done'}
+                >
+                  {isDone && <span className="text-xs font-bold">✓</span>}
+                </button>
+
                 {/* Day label */}
-                <div className="shrink-0 w-24">
-                  <div className={`text-sm font-semibold ${isToday ? 'text-emerald-400' : 'text-gray-300'}`}>
+                <div className="shrink-0 w-20">
+                  <div className={`text-sm font-semibold ${isDone ? 'text-green-400' : isToday ? 'text-emerald-400' : 'text-gray-300'}`}>
                     {day.label}
-                    {isToday && <span className="ml-1 text-xs text-emerald-500">← today</span>}
+                    {isToday && !isDone && <span className="ml-1 text-xs text-emerald-500">← today</span>}
                   </div>
                   <div className="text-xs text-gray-500">{date.slice(5)}</div>
                 </div>
@@ -132,8 +166,8 @@ function WeeklyPlan() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-base">{swapToIndoor ? '🚴' : day.icon}</span>
-                    <span className={`text-sm font-medium ${isToday ? 'text-white' : 'text-gray-200'}`}>
-                      {swapToIndoor ? 'Indoor Bike (Zwift)' : day.title}
+                    <span className={`text-sm font-medium ${isDone ? 'text-gray-400 line-through' : isToday ? 'text-white' : 'text-gray-200'}`}>
+                      {activityTitle}
                     </span>
                     {swapToIndoor && (
                       <span className="text-xs bg-amber-800/50 text-amber-300 rounded px-1.5 py-0.5">
@@ -141,30 +175,32 @@ function WeeklyPlan() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {swapToIndoor
-                      ? `${w.walkRecommendation.reason} — do 30–45 min Zone 2 instead`
-                      : day.desc}
-                  </p>
+                  {!isDone && (
+                    <>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {swapToIndoor
+                          ? `${w.walkRecommendation.reason} — do 30–45 min Zone 2 instead`
+                          : day.desc}
+                      </p>
 
-                  {/* Weather strip for walk days */}
-                  {isWalkDay && w && !swapToIndoor && (
-                    <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
-                      <span>{w.weatherIcon} {w.weatherLabel}</span>
-                      <span>🌡️ {w.tempMin}–{w.tempMax}°C</span>
-                      {w.precipitation > 0 && <span>💧 {w.precipitation}mm</span>}
-                      <span>💨 {w.windspeed} km/h</span>
-                    </div>
-                  )}
+                      {isWalkDay && w && !swapToIndoor && (
+                        <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
+                          <span>{w.weatherIcon} {w.weatherLabel}</span>
+                          <span>🌡️ {w.tempMin}–{w.tempMax}°C</span>
+                          {w.precipitation > 0 && <span>💧 {w.precipitation}mm</span>}
+                          <span>💨 {w.windspeed} km/h</span>
+                        </div>
+                      )}
 
-                  {/* Walk recommendation note */}
-                  {isWalkDay && w && !swapToIndoor && w.walkRecommendation.reason !== 'Good conditions for a walk' && (
-                    <p className="text-xs text-amber-400 mt-1">⚠️ {w.walkRecommendation.reason}</p>
+                      {isWalkDay && w && !swapToIndoor && w.walkRecommendation.reason !== 'Good conditions for a walk' && (
+                        <p className="text-xs text-amber-400 mt-1">⚠️ {w.walkRecommendation.reason}</p>
+                      )}
+                    </>
                   )}
                 </div>
 
-                {/* Weather for non-walk days (Zwift/rest) — just show temp */}
-                {!isWalkDay && w && day.type !== 'rest' && (
+                {/* Weather for Zwift days — just show temp */}
+                {!isWalkDay && !isDone && w && day.type !== 'rest' && (
                   <div className="shrink-0 text-right text-xs text-gray-500">
                     <div>{w.weatherIcon}</div>
                     <div>{w.tempMax}°C</div>
