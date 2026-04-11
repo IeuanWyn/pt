@@ -1,7 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
-import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData, importHealthConnect, getBodyMetrics, getLatestBodyMetrics, getRenphoStatus, connectRenpho, syncRenpho, disconnectRenpho } from '../api'
+import { saveProfile, getStravaAuthUrl, disconnectStrava, clearAllData, importHealthConnect, getBodyMetrics, getLatestBodyMetrics, getRenphoStatus, connectRenpho, syncRenpho, disconnectRenpho, getSleeperStatus, saveSleeperCredentials, disconnectSleeper } from '../api'
 import Card from '../components/Card'
+
+function HelpPopover({ children }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  return (
+    <span className="relative inline-flex items-center" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        className="w-4 h-4 rounded-full bg-slate-600 hover:bg-slate-500 text-gray-300 text-[10px] font-bold flex items-center justify-center ml-1.5 flex-shrink-0"
+        aria-label="How to find this"
+      >
+        ?
+      </button>
+      {open && (
+        <div className="absolute left-6 top-0 z-20 w-64 bg-slate-700 border border-slate-500 rounded-lg p-3 shadow-xl text-xs text-gray-300 space-y-1.5">
+          {children}
+        </div>
+      )}
+    </span>
+  )
+}
 
 function getFirstSaturdayOfNovember(year) {
   const nov1 = new Date(year, 10, 1) // November 1st
@@ -38,6 +70,38 @@ export default function Profile() {
   const [saved, setSaved] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [clearing, setClearing] = useState(false)
+
+  // Sleeper
+  const [sleeperStatus, setSleeperStatus] = useState(null)
+  const [sleeperForm, setSleeperForm] = useState({ league_id: '', user_id: '' })
+  const [sleeperSaving, setSleeperSaving] = useState(false)
+  const [sleeperMsg, setSleeperMsg] = useState(null)
+
+  useEffect(() => {
+    getSleeperStatus().then(r => setSleeperStatus(r.data)).catch(() => {})
+  }, [])
+
+  const handleSleeperSave = async (e) => {
+    e.preventDefault()
+    setSleeperSaving(true)
+    setSleeperMsg(null)
+    try {
+      const res = await saveSleeperCredentials(sleeperForm)
+      setSleeperMsg({ success: true, text: res.data.message })
+      setSleeperStatus({ connected: true, league_id: sleeperForm.league_id, user_id: sleeperForm.user_id })
+      setSleeperForm({ league_id: '', user_id: '' })
+    } catch (err) {
+      setSleeperMsg({ success: false, text: err.response?.data?.error || 'Save failed' })
+    } finally {
+      setSleeperSaving(false)
+    }
+  }
+
+  const handleSleeperDisconnect = async () => {
+    await disconnectSleeper()
+    setSleeperStatus({ connected: false })
+    setSleeperMsg(null)
+  }
 
   // Renpho
   const [renphoStatus, setRenphoStatus] = useState(null)
@@ -245,6 +309,87 @@ export default function Profile() {
               </svg>
               Connect Strava
             </button>
+          </div>
+        )}
+      </Card>
+
+      {/* Sleeper League Sync */}
+      <Card title="Sleeper League Sync" icon="🏈">
+        {sleeperStatus?.connected ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-400 font-medium">Connected ✓</p>
+                <p className="text-xs text-gray-400 mt-0.5">League ID: {sleeperStatus.league_id}</p>
+                <p className="text-xs text-gray-400">User ID: {sleeperStatus.user_id}</p>
+              </div>
+              <button
+                onClick={handleSleeperDisconnect}
+                className="px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded-lg text-sm"
+              >
+                Disconnect
+              </button>
+            </div>
+            {sleeperMsg && (
+              <p className={`text-sm ${sleeperMsg.success ? 'text-green-400' : 'text-red-400'}`}>{sleeperMsg.text}</p>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-300">
+              Connect your Sleeper fantasy league to pull in standings and matchup data.
+            </p>
+            <form onSubmit={handleSleeperSave} className="space-y-3">
+              <div>
+                <label className="text-xs text-gray-400 flex items-center mb-1">
+                  Sleeper League ID
+                  <HelpPopover>
+                    <p className="font-medium text-white mb-1">Finding your League ID</p>
+                    <p>Open Sleeper and go to your league. The League ID is the long number in the URL:</p>
+                    <p className="font-mono bg-slate-800 rounded px-1.5 py-1 mt-1 break-all">sleeper.com/leagues/<span className="text-emerald-400">123456789</span>/...</p>
+                    <p className="mt-1">You can also find it under <span className="text-white">League Settings → Details</span>.</p>
+                  </HelpPopover>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 123456789012345678"
+                  value={sleeperForm.league_id}
+                  onChange={e => setSleeperForm(p => ({ ...p, league_id: e.target.value }))}
+                  required
+                  className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 flex items-center mb-1">
+                  Sleeper User ID
+                  <HelpPopover>
+                    <p className="font-medium text-white mb-1">Finding your User ID</p>
+                    <p>In the Sleeper app, tap your <span className="text-white">avatar (bottom-right) → Settings</span>. Your User ID is shown at the top of that screen.</p>
+                    <p className="mt-1">Alternatively, visit this URL in your browser (replace with your username):</p>
+                    <p className="font-mono bg-slate-800 rounded px-1.5 py-1 mt-1 break-all">api.sleeper.app/v1/user/<span className="text-emerald-400">username</span></p>
+                    <p className="mt-1">Look for the <span className="font-mono text-white">user_id</span> field in the response.</p>
+                  </HelpPopover>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 123456789012345678"
+                  value={sleeperForm.user_id}
+                  onChange={e => setSleeperForm(p => ({ ...p, user_id: e.target.value }))}
+                  required
+                  className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={sleeperSaving}
+                className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-900 text-white rounded-lg text-sm font-medium"
+              >
+                {sleeperSaving ? 'Saving...' : 'Save League Details'}
+              </button>
+            </form>
+            {sleeperMsg && (
+              <p className={`text-sm ${sleeperMsg.success ? 'text-green-400' : 'text-red-400'}`}>{sleeperMsg.text}</p>
+            )}
           </div>
         )}
       </Card>
