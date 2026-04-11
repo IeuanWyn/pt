@@ -110,8 +110,11 @@ Coaching guidelines:
 - Use markdown formatting in responses (bold for emphasis, bullet points for lists, etc.)${birthdayNote}`;
 }
 
-async function chat(userMessage) {
+// userMessage is what is sent to Claude (may be URL-enriched).
+// storedMessage is what gets saved to history (original, unenriched).
+async function chat(userMessage, storedMessage) {
   const systemPrompt = await buildSystemPrompt();
+  const messageToStore = storedMessage || userMessage;
 
   const history = await query(`
     SELECT role, content FROM chat_history
@@ -133,7 +136,7 @@ async function chat(userMessage) {
 
   const assistantMessage = response.content[0].text;
 
-  await query('INSERT INTO chat_history (role, content) VALUES (?, ?)', ['user', userMessage]);
+  await query('INSERT INTO chat_history (role, content) VALUES (?, ?)', ['user', messageToStore]);
   await query('INSERT INTO chat_history (role, content) VALUES (?, ?)', ['assistant', assistantMessage]);
 
   return assistantMessage;

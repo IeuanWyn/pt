@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { chat, clearHistory } = require('../services/claude');
 const { query } = require('../services/db');
+const { fetchLinkTitle, extractUrls } = require('../services/linkTitle');
 
 // Get chat history
 router.get('/history', async (req, res) => {
@@ -26,7 +27,21 @@ router.post('/message', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    const response = await chat(message.trim());
+    const rawMessage = message.trim();
+
+    // Enrich any URLs in the message with their article titles so Claude has
+    // full context. We store the original message in history but send the
+    // enriched version to the model.
+    let enrichedMessage = rawMessage;
+    const urls = extractUrls(rawMessage);
+    for (const url of urls.slice(0, 3)) {
+      const title = await fetchLinkTitle(url);
+      if (title) {
+        enrichedMessage = enrichedMessage.replace(url, `${url} [Article: "${title}"]`);
+      }
+    }
+
+    const response = await chat(enrichedMessage, rawMessage);
     res.json({ response });
   } catch (err) {
     console.error('Chat error:', err.message);
