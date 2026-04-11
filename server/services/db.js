@@ -159,6 +159,16 @@ async function initDB() {
     )
   `);
 
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS sleeper_credentials (
+      id INT PRIMARY KEY DEFAULT 1,
+      league_id VARCHAR(100),
+      user_id VARCHAR(100),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+
   console.log('Database tables initialised');
 }
 

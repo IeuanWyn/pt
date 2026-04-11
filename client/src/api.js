@@ -57,5 +57,10 @@ export const getLatestBodyMetrics = () => api.get('/health-connect/latest')
 // Weather
 export const getWeekWeather = () => api.get('/weather/week')
 
+// Sleeper
+export const getSleeperStatus = () => api.get('/sleeper/status')
+export const saveSleeperCredentials = (data) => api.post('/sleeper/save', data)
+export const disconnectSleeper = () => api.post('/sleeper/disconnect')
+
 // Clear all data
 export const clearAllData = () => api.delete('/data/all')
