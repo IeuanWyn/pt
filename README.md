@@ -1,4 +1,4 @@
-# 10k Training Plan App
+# SidelineSignal
 
 A personalised 10k running training plan app for a complete beginner, featuring Strava integration, a Claude AI coach, and full database persistence.
 

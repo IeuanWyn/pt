@@ -7,9 +7,22 @@ export default function Header() {
   return (
     <header className="bg-slate-900 border-b border-slate-700 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center gap-3">
-        <span className="text-2xl">🏃</span>
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="18" cy="30" r="4" fill="#10b981"/>
+          <path d="M 18 21 A 9 9 0 0 1 27 30" stroke="#10b981" strokeWidth="3.5" strokeLinecap="round"/>
+          <path d="M 18 15 A 15 15 0 0 1 33 30" stroke="#10b981" strokeWidth="3" strokeLinecap="round" opacity="0.6"/>
+          <path d="M 18 9  A 21 21 0 0 1 39 30" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" opacity="0.3"/>
+          <circle cx="65" cy="28" r="8" fill="#10b981"/>
+          <line x1="64" y1="36" x2="61" y2="52" stroke="#10b981" strokeWidth="4.5" strokeLinecap="round"/>
+          <line x1="63" y1="42" x2="52" y2="37" stroke="#10b981" strokeWidth="4" strokeLinecap="round"/>
+          <line x1="62" y1="43" x2="73" y2="38" stroke="#10b981" strokeWidth="4" strokeLinecap="round"/>
+          <line x1="61" y1="52" x2="51" y2="68" stroke="#10b981" strokeWidth="4.5" strokeLinecap="round"/>
+          <line x1="61" y1="52" x2="71" y2="65" stroke="#10b981" strokeWidth="4.5" strokeLinecap="round"/>
+        </svg>
         <div>
-          <h1 className="font-bold text-white leading-none">10k Training</h1>
+          <h1 className="font-bold text-white leading-none">
+            Sideline<span className="text-emerald-400">Signal</span>
+          </h1>
           {profile?.name && (
             <p className="text-xs text-gray-400">{profile.name}</p>
           )}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Background -->
+  <rect width="100" height="100" rx="16" fill="#0f172a"/>
+
+  <!-- Signal source (coach on the sideline) -->
+  <circle cx="18" cy="30" r="4" fill="#10b981"/>
+  <!-- Signal arcs radiating rightward — quarter-circles centered on the source dot -->
+  <path d="M 18 21 A 9 9 0 0 1 27 30" stroke="#10b981" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 18 15 A 15 15 0 0 1 33 30" stroke="#10b981" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 18 9  A 21 21 0 0 1 39 30" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Running figure (athlete receiving the signal) -->
+  <!-- Head -->
+  <circle cx="65" cy="28" r="8" fill="#10b981"/>
+  <!-- Torso (forward lean) -->
+  <line x1="64" y1="36" x2="61" y2="52" stroke="#10b981" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Front arm (sweeping back-left) -->
+  <line x1="63" y1="42" x2="52" y2="37" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+  <!-- Back arm (driving forward-right) -->
+  <line x1="62" y1="43" x2="73" y2="38" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+  <!-- Front leg (pushing back) -->
+  <line x1="61" y1="52" x2="51" y2="68" stroke="#10b981" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Back leg (driving forward) -->
+  <line x1="61" y1="52" x2="71" y2="65" stroke="#10b981" stroke-width="4.5" stroke-linecap="round"/>
+</svg>
